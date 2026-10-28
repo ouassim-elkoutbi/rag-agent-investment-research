@@ -146,6 +146,12 @@ docker run -p 8000:8000 --env-file .env rag-agent
 
 The API is then available at `http://localhost:8000` exactly as above. The prebuilt Chroma index is included in the image, so the container is ready to answer on startup.
 
+## Deployment
+
+The service runs as a container, so it deploys unchanged on any Docker host. It has been deployed on an AWS EC2 instance (Ubuntu, arm64 / Graviton), with the image built natively for the instance architecture. The `GOOGLE_API_KEY` is injected at runtime with `--env-file`, so no credentials are baked into the image, and the container runs detached with a restart policy so it comes back up automatically after a reboot.
+
+
+
 ## Project structure
 
 ```

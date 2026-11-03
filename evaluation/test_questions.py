@@ -144,7 +144,7 @@ TEST_QUESTIONS = [
         "tolerance": 3.0,
     },
 
-    # Out-of-scope questions (should abstain, NOT make up an answer) 
+    # Out-of-scope questions (should abstain, NOT make up an answer)
     {
         "question": "What is the current price of Bitcoin today?",
         "type": "out_of_scope",

@@ -1,0 +1,10 @@
+line-length = 100
+exclude = [".venv", "chroma_db", "documents"]
+
+[lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E402"]
+
+[lint.per-file-ignores]
+"evaluation/test_questions.py" = ["E501"]
+"src/rag.py" = ["E501"]

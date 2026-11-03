@@ -1,15 +1,15 @@
-import sys
 import os
-import re
-import math
+import sys
 import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
-from agent import ask_raw
 from test_questions import TEST_QUESTIONS
+
+from agent import ask_raw
+from logic import is_abstention, value_in_answer
 
 load_dotenv()
 
@@ -60,12 +60,7 @@ def check_calculation(item: dict, answer: str) -> bool:
     """Check that the expected numeric value appears in the answer (within tolerance)."""
     expected_value = float(item["expected_value"])
     tolerance = float(item.get("tolerance", 1.0))
-    matches = re.findall(r"[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?", answer)
-    values = [float(m.replace(",", "")) for m in matches]
-    return any(
-        math.isclose(v, expected_value, rel_tol=0, abs_tol=tolerance)
-        for v in values
-    )
+    return value_in_answer(answer, expected_value, tolerance)
 
 
 def evaluate():
@@ -76,13 +71,13 @@ def evaluate():
         qtype = item["type"]
 
         answer = call_with_retry(ask_raw, question)
-        abstained = answer.strip().lower().startswith("abstain:")
+        abstained = is_abstention(answer)
 
         if qtype == "out_of_scope":
             passed = abstained
         elif qtype == "calculation":
             passed = (not abstained) and check_calculation(item, answer)
-        else:  
+        else:
             passed = (not abstained) and call_with_retry(
                 judge_concept, question, item["expected"], answer
             )

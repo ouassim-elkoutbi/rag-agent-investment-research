@@ -1,7 +1,9 @@
-from langchain_core.tools import tool
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
+from langchain_core.tools import tool
+from langchain_huggingface import HuggingFaceEmbeddings
+
+from logic import compute_compound_interest
 
 load_dotenv()
 
@@ -18,9 +20,7 @@ def compound_interest(principal: float, annual_rate: float, years: float) -> str
     Returns:
         A string with the final amount after compound growth.
     """
-    rate = annual_rate / 100
-    final_amount = principal * (1 + rate) ** years
-    gain = final_amount - principal
+    final_amount, gain = compute_compound_interest(principal, annual_rate, years)
     return (
         f"Starting with {principal:.2f}, at {annual_rate}% per year for {years} years, "
         f"the investment grows to {final_amount:.2f} (a gain of {gain:.2f})."
@@ -47,5 +47,5 @@ def search_investment_documents(query: str) -> str:
     results = _vectorstore.similarity_search(query, k=4)
     if not results:
         return "No relevant information found in the documents."
-    
+
     return "\n\n".join(doc.page_content for doc in results)

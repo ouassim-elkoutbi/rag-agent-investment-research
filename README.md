@@ -150,7 +150,7 @@ The API is then available at `http://localhost:8000` exactly as above. The prebu
 
 ## Deployment
 
-The service runs as a container, so it deploys unchanged on any Docker host. It has been deployed on an AWS EC2 instance (Ubuntu, arm64 / Graviton), with the image built natively for the instance architecture. The `GOOGLE_API_KEY` is injected at runtime with `--env-file`, so no credentials are baked into the image, and the container runs detached with a restart policy so it comes back up automatically after a reboot.
+The service runs as a container, so it deploys unchanged on any Docker host. It is deployed on an AWS EC2 instance (Ubuntu, arm64 / Graviton). The ARM64 image is built in CI on a native arm64 GitHub runner and published to the GitHub Container Registry (GHCR); the instance then pulls that image and restarts the container through `deploy.sh`, which also runs a post-deployment health check. The `GOOGLE_API_KEY` is injected at runtime with `--env-file`, so no credentials are baked into the image, and the container runs detached with a restart policy so it comes back up automatically after a reboot. This pull-based model keeps deployment automated without exposing SSH to the internet (see the CI/CD section).
 
 
 ## Project structure

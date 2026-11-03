@@ -174,6 +174,26 @@ The service runs as a container, so it deploys unchanged on any Docker host. It 
 └── .env.example
 ```
 
+
+
+## CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment.
+
+**CI** (`.github/workflows/ci.yml`, runs on every push / PR)
+- Linting with Ruff
+- Unit tests with pytest — fast, deterministic checks (compound-interest maths, abstention logic), no API calls
+
+**CD** (`.github/workflows/deploy.yml`, manual trigger)
+- Builds a native ARM64 Docker image on a GitHub arm64 runner (target: an AWS Graviton EC2 instance)
+- Publishes the image to the GitHub Container Registry (GHCR)
+
+**Deployment** (`deploy.sh`, pull-based)
+- The EC2 instance pulls the latest image from GHCR, restarts the container and runs a health check
+- Pull-based deployment avoids exposing SSH to the internet; secrets stay on the server (injected via `--env-file`)
+
+
+
 ## Limitations and future work
 
 - The knowledge base is limited to the included documents; it does not cover real time market data by design.

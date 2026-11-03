@@ -1,5 +1,7 @@
 # Investment Research & Risk Assistant
 
+![CI](https://github.com/ouassim-elkoutbi/rag-agent-investment-research/actions/workflows/ci.yml/badge.svg)
+
 A Python RAG agent for investment research, combining document retrieval, tool calling and automated evaluation. Built with LangChain and LangGraph, containerized with Docker and served through a FastAPI REST API.
 
 **Tech:** Python · RAG · LLM Agents · Tool Use · LangChain · LangGraph · Chroma · FastAPI · Docker · Evaluation
